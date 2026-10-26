@@ -3,16 +3,47 @@ import os
 import json
 from openai import OpenAI
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state = "expanded" )
-page_bg_img = """
-<style>
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;} 
-</style>
-"""
-st.markdown(page_bg_img, unsafe_allow_html=True)
+be_home = "https://imgs.699pic.com/images/500/441/402.jpg!list1x.v2"
+be_food = "https://img95.699pic.com/photo/60018/1797.jpg_wh860.jpg"
+be_ghost =  "https://img.cgmodel.com/image/2023/1214/cover/1361108-725795395.png"
 st.sidebar.header("导航栏")
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
+if page == "🏠 首页大厅":
+    current_bg = be_home
+elif page == "美食频道":
+    current_bg = be_food
+else:
+    current_bg = be_ghost
+page_bg_css = f"""
+<style>
+#MainMenu {{visibility: hidden;}}
+footer {{visibility: hidden;}}
+header {{visibility: hidden;}}
+[data-testid="stToolbar"] {{display: none !important;}}
+[data-testid="stStatusWidget"] {{display: none !important;}}
+[data-testid="stAppViewContainer"] {{
+    background-image: url("{current_bg}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}}
+[data-testid="stAppViewContainer"] > section {{
+    background-color: rgba(15, 15, 26, 0.85) !important; 
+}}
+[data-testid="stSidebar"] {{
+    background-color: rgba(20, 20, 30, 0.95);
+}}
+p, span, div, label, h1, h2, h3 {{
+    color: #ffffff !important;
+}}
+.stTextInput>div>div>input {{
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid #555 !important;
+}}
+</style>
+"""
+st.markdown(page_bg_css, unsafe_allow_html=True)
 if page == "🏠 首页大厅":
     st.title("🍜 杭电美食城 AI 推荐馆")
     st.info("👈 找不到功能入口？请点击左上角的 `>>` 箭头打开导航栏，选择【美食频道】或【怪谈游戏】！")
