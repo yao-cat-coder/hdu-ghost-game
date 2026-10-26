@@ -18,10 +18,19 @@ page_bg_css = f"""
 <style>
 #MainMenu {{visibility: hidden;}}
 footer {{visibility: hidden;}}
-[data-testid="stToolbar"] {{display: none !important;}}
+.stDeployButton {{display: none !important;}}
 [data-testid="stStatusWidget"] {{display: none !important;}}
 [data-testid="manage-app-button"] {{display: none !important;}}
-header {{background: transparent !important;}}
+header {{
+    background-color: rgba(20, 20, 30, 0.6) !important;
+}}
+[data-testid="collapsedControl"] {{
+    display: block !important;
+    color: white !important;
+    background-color: #ff7e5f !important; 
+    border-radius: 8px;
+    margin: 10px;
+}}
 [data-testid="stAppViewContainer"] {{
     background-image: url("{current_bg}");
     background-size: cover;
