@@ -3,9 +3,9 @@ import os
 import json
 from openai import OpenAI
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state = "expanded" )
-be_home = "https://github.com/yao-cat-coder/hdu-ghost-game/raw/main/cd3791aa30cfcd8a688c2a47a85b315e.jpg"
-be_food = "https://github.com/yao-cat-coder/hdu-ghost-game/raw/main/43bea60ff22e8442efa762fea07bb7f4.jpg"
-be_ghost =  "https://github.com/yao-cat-coder/hdu-ghost-game/raw/main/ffb762f61ac281140faedbbeb535db28.jpg"
+be_home = "https://github.com/yao-cat-coder/hdu-ghost-game/blob/main/cd3791aa30cfcd8a688c2a47a85b315e.jpg"
+be_food = "https://github.com/yao-cat-coder/hdu-ghost-game/blob/main/43bea60ff22e8442efa762fea07bb7f4.jpg"
+be_ghost =  "https://github.com/yao-cat-coder/hdu-ghost-game/blob/main/ffb762f61ac281140faedbbeb535db28.jpg"
 st.sidebar.header("导航栏")
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
 if page == "🏠 首页大厅":
