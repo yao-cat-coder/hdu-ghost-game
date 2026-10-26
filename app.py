@@ -5,8 +5,6 @@ from openai import OpenAI
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state = "expanded" )
 st.sidebar.header("导航栏")
 page_bg_img = """
-<style>
-/* 1. 全局背景：深色渐变 */
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #1e1e2f, #0f0f1a);
     color: #e0e0e0;
