@@ -38,7 +38,7 @@ if page == "🏠 首页大厅":
                 请根据以下真实评价{context}，为这位同学推荐一家店。
                 要求：语气热情、幽默，用小红书的风格输出，字数在50子以内，包含菜品，口味，价格，是否干净等内容。如果真实评价的内容不够，你可以自己寻找发挥，但是要提醒同学。
                 """
-                response = client.chat.completion.creat(
+                response = client.chat.completion.create(
                     model = "glm-4-flash",
                     messages = [
                         {"role": "user", "content": prompt},
@@ -49,7 +49,7 @@ if page == "🏠 首页大厅":
                 st.markdown(ai_reply)
                 st.balloons()
         else:
-            warning("⚠️请先输入你的口味需求哦！")
+            st.warning("⚠️请先输入你的口味需求哦！")
 elif page == "美食频道":
     st.header("🍜 美食推荐区")
     st.write("你可以在这里评价周围美食")
