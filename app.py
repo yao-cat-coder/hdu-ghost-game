@@ -74,7 +74,7 @@ if page == "🏠 首页大厅":
     else:
         pass
     name = st.text_input("请输入你的昵称：")
-    user_want = st.text_input("你想吃点什么😊，你的口味是什么❓（想吃点辣的吗、预算20以内想吃好评最多的）")
+    user_want = st.text_input("你想吃点什么😊，你的口味是什么❓（想吃点辣的吗、预算20以内想吃好评最多的...）")
     submit = st.button("🤖让AI帮我选一家！")
     if submit:
         if name != "" and user_want != "":
