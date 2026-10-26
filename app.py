@@ -17,22 +17,22 @@ p, span, div, label {
     border: 1px solid #555 !important;
     border-radius: 8px;
 }
-div[data-baseweb="select"] > div {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    color: #ffffff !important;
-    border: 1px solid #555 !important;
-}
-div[data-baseweb="popover"] ul, 
-div[data-baseweb="menu"] {
+div[data-baseweb="popover"] ul {
     background-color: #1e1e2f !important; 
     border: 1px solid #555 !important;
 }
 div[data-baseweb="popover"] li {
+    background-color: #1e1e2f !important;
     color: #ffffff !important;
-    background-color: transparent !important;
 }
-div[data-baseweb="popover"] li:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+div[data-baseweb="popover"] li:hover, 
+div[data-baseweb="popover"] li[aria-selected="true"] {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+div[data-baseweb="select"] > div {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid #555 !important;
 }
 [data-testid="stSidebar"] {
     background-color: #14141e;
