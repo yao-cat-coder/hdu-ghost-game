@@ -18,9 +18,10 @@ page_bg_css = f"""
 <style>
 #MainMenu {{visibility: hidden;}}
 footer {{visibility: hidden;}}
-header {{visibility: hidden;}}
 [data-testid="stToolbar"] {{display: none !important;}}
 [data-testid="stStatusWidget"] {{display: none !important;}}
+[data-testid="manage-app-button"] {{display: none !important;}}
+header {{background: transparent !important;}}
 [data-testid="stAppViewContainer"] {{
     background-image: url("{current_bg}");
     background-size: cover;
@@ -31,7 +32,8 @@ header {{visibility: hidden;}}
     background-color: rgba(15, 15, 26, 0.85) !important; 
 }}
 [data-testid="stSidebar"] {{
-    background-color: rgba(20, 20, 30, 0.95);
+    background-color: rgba(20, 20, 30, 0.95) !important;
+    border-right: 1px solid #555;
 }}
 p, span, div, label, h1, h2, h3 {{
     color: #ffffff !important;
