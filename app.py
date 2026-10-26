@@ -36,9 +36,9 @@ if page == "🏠 首页大厅":
                 prompt = f"""
                 你是一个杭电美食推荐官。同学 {name} 的需求是：{user_want}。
                 请根据以下真实评价{context}，为这位同学推荐一家店。
-                要求：语气热情、幽默，用小红书的风格输出，字数在50子以内，包含菜品，口味，价格，是否干净等内容。如果真实评价的内容不够，你可以自己寻找发挥，但是要提醒同学。
+                要求：语气热情、幽默，用小红书的风格输出，字数在50字以内，包含菜品，口味，价格，是否干净等内容。如果真实评价的内容不够，你可以自己寻找发挥，但是要提醒同学。
                 """
-                response = client.chat.completion.create(
+                response = client.chat.completions.create(
                     model = "glm-4-flash",
                     messages = [
                         {"role": "user", "content": prompt},
