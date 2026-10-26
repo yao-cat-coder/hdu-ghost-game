@@ -101,17 +101,17 @@ elif page == "怪谈游戏":
         st.session_state.messages.append({"role": "user", "content": play_action})
         with st.chat_message("user"):
             st.markdown(play_action)
-        with st.chat_message("assistent"):
+        with st.chat_message("assistant"):
             with st.spinner("周围的空气变粘稠了..."):
                 client = OpenAI(
-                    api_key = "6c8e59f98d9b44dcb44923192214fe22.WcXWRdNhwxhF7Y53",
+                    api_key =st.secrets["ZHIPU_API_KEY"],
                     base_url = "https://open.bigmodel.cn/api/paas/v4/"
                 )
-                reponses = client.chat.completions.create(
+                response = client.chat.completions.create(
                     model = "glm-4-flash",
                     messages = st.session_state.messages
                 )
-                ai_reply = reponses.choices[0].message.content
+                ai_reply = response.choices[0].message.content
                 st.markdown(ai_reply)
         st.session_state.messages.append({"role": "assistant", "content": ai_reply})
 
