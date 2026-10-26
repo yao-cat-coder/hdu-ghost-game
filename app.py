@@ -17,6 +17,9 @@ p, span, div, label {
     border: 1px solid #555 !important;
     border-radius: 8px;
 }
+div[data-baseweb="popover"] {
+    background-color: transparent !important;
+}
 div[data-baseweb="popover"] ul {
     background-color: #1e1e2f !important; 
     border: 1px solid #555 !important;
@@ -40,6 +43,7 @@ div[data-baseweb="select"] > div {
 }
 </style>
 """
+st.markdown(page_bg_img, unsafe_allow_html=True)
 st.markdown(page_bg_img, unsafe_allow_html=True)
 st.sidebar.header("导航栏")
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
