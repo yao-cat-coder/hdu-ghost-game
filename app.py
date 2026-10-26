@@ -11,6 +11,7 @@ page_bg_img = """
 </style>
 }
 """
+st.markdown(page_bg_img, unsafe_allow_html=True)
 st.sidebar.header("导航栏")
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
 if page == "🏠 首页大厅":
