@@ -5,9 +5,13 @@ from openai import OpenAI
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state = "expanded" )
 page_bg_img = """
 <style>
-[data-testid="manage-app-button"]{display: none !important;}
-[data-testid="stStatusWidget"]{display: none !important;}
-.stDeployButton{display: none !important;}
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;} 
+div[data-testid="stToolbar"] {display: none !important;}
+div[data-testid="stStatusWidget"] {display: none !important;}
+.stDeployButton {display: none !important;}
+[data-testid="manage-app-button"] {display: none !important;}
 </style>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
