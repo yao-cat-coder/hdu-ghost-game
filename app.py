@@ -17,7 +17,7 @@ div[data-testid="stStatusWidget"] {display: none !important;}
 div[data-testid="stAppViewContainer"] > div[style*="position: fixed"] {
     display: none !important; 
 }
-
+footer {visibility: hidden !important;}
 </style>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
