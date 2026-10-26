@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import json
 from openai import OpenAI
-st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide")
+st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state = "expanded")
 st.sidebar.header("导航栏")
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
 if page == "🏠 首页大厅":
