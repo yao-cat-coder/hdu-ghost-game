@@ -25,7 +25,7 @@ elif page == "美食频道":
     except FileNotFoundError:
         reviews=[]
     except json.JSONDecodeError:
-        reviews=[]
+        reviews = []
     with st.form("my_view_form"):
         st.subheader("发布你的专属评价")
         location = st.selectbox("选择区域", ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"])
@@ -47,16 +47,22 @@ elif page == "美食频道":
     if len(reviews)==0:
         st.info("大家还没有评价快来抢沙发🛋️")
     else:
-        display_reviews=list(reversed(reviews))
-        for i, r in enumerate(display_reviews,1):
-            with st.expander(f"📍{r['name']}——⭐{r['score']}/10"):
-                st.write(r['comment'])
-                if st.button("🗑️ 删除这条评价", key=f"del_{i}"):
-                    real_index=len(reviews)-i
-                    reviews.pop(real_index)
-                    with open("reviews.json", "w", encoding="utf-8")as f:
-                        json.dump(reviews, f, ensure_ascii=False, indent=4)
-                    st.rerun()
+        regions = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
+        tabs = st.tabs(regions)
+        for tab, region in zip(tabs, regions):
+            with tab:
+                region_reviews = [r for r in reversed(reviews) if r.get("location")==region]
+                if len(region_reviews) == 0:
+                    st.write("这个区域目前空空如也，快来抢首评论！")
+                else:
+                    for r in region_reviews:
+                        with st.expander(f"📍{r['name']}——⭐{r['score']}/10"):
+                            st.write(r['comment'])
+                            if st.button("🗑️ 删除这条评价", key=f"del_{r['location']}_{r['name']}_{r['score']}"):
+                                reviews.remove(r)
+                                with open("reviews.json", "w", encoding="utf-8")as f:
+                                    json.dump(reviews, f, ensure_ascii=False, indent=4)
+                                st.rerun()        
 elif page == "怪谈游戏":
     st.header("👻 怪谈游戏区")
     st.write("欢迎来到受诅咒的杭电美食城")
