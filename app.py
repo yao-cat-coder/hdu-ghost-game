@@ -24,7 +24,7 @@ if page == "🏠 首页大厅":
     else:
         context = "目前还没有人留下真实评价，请你根据杭州电子科技大学周围的常见美食生成真实的美食推荐。"
     name = st.text_input("请输入你的昵称：")
-    user_want = st.text_input("你想吃点什么😊，你的口味是什么❓（想吃点辣的吗？，预算20以内）")
+    user_want = st.text_input("你想吃点什么😊，你的口味是什么❓（想吃点辣的吗、预算20以内想吃好评最多的）")
     submit = st.button("🤖让AI帮我选一家！")
     if submit:
         if name != " " and user_want != " ":
@@ -35,8 +35,21 @@ if page == "🏠 首页大厅":
                 )
                 prompt = f"""
                 你是一个杭电美食推荐官。同学 {name} 的需求是：{user_want}。
-                请根据一下真实评价
+                请根据以下真实评价{content}，为这位同学推荐一家店。
+                要求：语气热情、幽默，用小红书的风格输出，字数在50子以内，包含菜品，口味，价格，是否干净等内容。如果真实评价的内容不够，你可以自己寻找发挥，但是要提醒同学。
                 """
+                response = client.chat.completion.creat(
+                    model = "glm-4-flash",
+                    messages = [
+                        {"role": "user", "content": prompt},
+                    ]
+                )
+                ai_reply = response.choices[0].messages.content
+                st.success("✨AI为你找到了绝佳选择：")
+                st.markdowm(ai_reply)
+                st.balloons()
+        else:
+            warning("⚠️请先输入你的口味需求哦！")
 elif page == "美食频道":
     st.header("🍜 美食推荐区")
     st.write("你可以在这里评价周围美食")
