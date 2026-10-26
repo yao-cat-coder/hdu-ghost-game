@@ -8,7 +8,7 @@ page_bg_img = """
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #1e1e2f, #0f0f1a);
     color: #e0e0e0;
-<style>
+</style>
 }
 """
 st.sidebar.header("导航栏")
