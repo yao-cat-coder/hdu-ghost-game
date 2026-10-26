@@ -7,38 +7,30 @@ page_bg_img = """
 <style>
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #1e1e2f, #0f0f1a);
-    color: #e0e0e0;
-
 }
-[data-testid="stSidebar"] {
-    background-color: rgba(20, 20, 30, 0.9);
-    border-right: 1px solid #333;
-}
-.stButton > button {
-    background: linear-gradient(90deg, #ff7e5f, #feb47b);
-    color: white;
-    border-radius: 8px;
-    border: none;
-    transition: all 0.3s ease;
-}
-.stButton > button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 126, 95, 0.6);
-}
-.streamlit-expanderHeader {
-    background-color: #2a2a3f !important;
-    border-radius: 8px;
+p, span, div, label {
+    color: #ffffff !important;
 }
 .stTextInput>div>div>input {
-    background-color: #2a2a3f;
-    color: white;
-    border-radius: 5px;
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid #555 !important;
+    border-radius: 8px;
 }
-h1, h2, h3 {
-    color: #ff9a9e !important;
+[data-testid="stSidebar"] {
+    background-color: #14141e;
+    border-right: 1px solid #333;
+}
+[data-testid="stNotification"] {
+    background-color: rgba(30, 144, 255, 0.2) !important;
+}
+.stTextInput>div>div>input:focus {
+    border-color: #ff9a9e !important;
+    box-shadow: 0 0 5px rgba(255, 154, 158, 0.5) !important;
 }
 </style>
 """
+st.markdown(page_bg_img, unsafe_allow_html=True)
 st.markdown(page_bg_img, unsafe_allow_html=True)
 st.sidebar.header("导航栏")
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
