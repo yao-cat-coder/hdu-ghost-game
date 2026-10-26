@@ -17,20 +17,29 @@ p, span, div, label {
     border: 1px solid #555 !important;
     border-radius: 8px;
 }
+div[data-baseweb="select"] > div {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+    border: 1px solid #555 !important;
+}
+div[data-baseweb="popover"] ul, 
+div[data-baseweb="menu"] {
+    background-color: #1e1e2f !important; 
+    border: 1px solid #555 !important;
+}
+div[data-baseweb="popover"] li {
+    color: #ffffff !important;
+    background-color: transparent !important;
+}
+div[data-baseweb="popover"] li:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
 [data-testid="stSidebar"] {
     background-color: #14141e;
     border-right: 1px solid #333;
 }
-[data-testid="stNotification"] {
-    background-color: rgba(30, 144, 255, 0.2) !important;
-}
-.stTextInput>div>div>input:focus {
-    border-color: #ff9a9e !important;
-    box-shadow: 0 0 5px rgba(255, 154, 158, 0.5) !important;
-}
 </style>
 """
-st.markdown(page_bg_img, unsafe_allow_html=True)
 st.markdown(page_bg_img, unsafe_allow_html=True)
 st.sidebar.header("导航栏")
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
