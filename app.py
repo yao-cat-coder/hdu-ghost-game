@@ -3,48 +3,6 @@ import os
 import json
 from openai import OpenAI
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state = "expanded" )
-page_bg_img = """
-<style>
-[data-testid="stAppViewContainer"] {
-    background: linear-gradient(135deg, #1e1e2f, #0f0f1a);
-}
-p, span, div, label {
-    color: #ffffff !important;
-}
-.stTextInput>div>div>input {
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid #555 !important;
-    border-radius: 8px;
-}
-div[data-baseweb="popover"] {
-    background-color: transparent !important;
-}
-div[data-baseweb="popover"] ul {
-    background-color: #1e1e2f !important; 
-    border: 1px solid #555 !important;
-}
-div[data-baseweb="popover"] li {
-    background-color: #1e1e2f !important;
-    color: #ffffff !important;
-}
-div[data-baseweb="popover"] li:hover, 
-div[data-baseweb="popover"] li[aria-selected="true"] {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    color: #ffffff !important;
-}
-div[data-baseweb="select"] > div {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid #555 !important;
-}
-[data-testid="stSidebar"] {
-    background-color: #14141e;
-    border-right: 1px solid #333;
-}
-</style>
-"""
-st.markdown(page_bg_img, unsafe_allow_html=True)
-st.markdown(page_bg_img, unsafe_allow_html=True)
 st.sidebar.header("导航栏")
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
 if page == "🏠 首页大厅":
