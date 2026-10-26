@@ -24,13 +24,6 @@ footer {{visibility: hidden;}}
 header {{
     background-color: rgba(20, 20, 30, 0.6) !important;
 }}
-[data-testid="collapsedControl"] {{
-    display: block !important;
-    color: white !important;
-    background-color: #8b0000 !important; 
-    border-radius: 8px;
-    margin: 10px;
-}}
 [data-testid="stAppViewContainer"] {{
     background-image: url("{current_bg}");
     background-size: cover;
@@ -40,17 +33,27 @@ header {{
 [data-testid="stAppViewContainer"] > section {{
     background-color: rgba(15, 15, 26, 0.85) !important; 
 }}
+p, span, label, h1, h2, h3, div:not([data-baseweb="select"]) {{
+    color: #ffffff !important;
+}}
 [data-testid="stSidebar"] {{
     background-color: rgba(20, 20, 30, 0.95) !important;
     border-right: 1px solid #555;
 }}
-p, span, div, label, h1, h2, h3 {{
+.stTextInput>div>div>input, .stTextArea>div>div>textarea {{
+    color: #000000 !important; 
+    background-color: #ffffff !important; 
+}}
+
+.stTextInput>div>div>input::placeholder, .stTextArea>div>div>textarea::placeholder {{
+    color: #666666 !important;
+}}
+.stButton>button, .stFormSubmitButton>button {{
     color: #ffffff !important;
 }}
-.stTextInput>div>div>input {{
-    color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid #555 !important;
+div[data-baseweb="select"] > div {{
+    color: #000000 !important;
+    background-color: #ffffff !important;
 }}
 </style>
 """
