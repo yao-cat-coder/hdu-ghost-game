@@ -75,9 +75,14 @@ if page == "🏠 首页大厅":
             context += f"- 区域：{r.get('location', '未知')}，店名：{r.get('name', '未知')}，评分：{r.get('score', '未知')}，评价：{r.get('comment', '无')}\n"
     else:
         pass
-    name = st.text_input("请输入你的昵称：")
-    user_want = st.text_input("你想吃点什么😊，你的口味是什么❓（想吃点辣的吗、预算20以内想吃好评最多的...）")
-    submit = st.button("🤖让AI帮我选一家！")
+    col1, col2 = st.columns(2)
+    with col1:
+        name = st.text_input("请输入你的昵称：")
+        user_want = st.text_input("你想吃点什么😊，你的口味是什么❓（辣的、清淡、预算20）")
+    with col2:
+        st.write("💡 不知道填什么？试试这些：")
+        st.info("👉 想要吃辣，预算20以内\n\n👉 想吃清淡的面食，要好評最多的")
+    submit = st.button("🤖让AI帮我选一家！", use_container_width=True)
     if submit:
         if name != "" and user_want != "":
             if len(reviews_data) == 0:
