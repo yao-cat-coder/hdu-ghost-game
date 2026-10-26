@@ -12,6 +12,12 @@ div[data-testid="stToolbar"] {display: none !important;}
 div[data-testid="stStatusWidget"] {display: none !important;}
 .stDeployButton {display: none !important;}
 [data-testid="manage-app-button"] {display: none !important;}
+[data-testid="stStatusWidget"] {display: none !important;}
+[data-testid="manage-app-button"] {display: none !important;}
+div[data-testid="stAppViewContainer"] > div[style*="position: fixed"] {
+    display: none !important; 
+}
+
 </style>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
