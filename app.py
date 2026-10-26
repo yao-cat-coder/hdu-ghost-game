@@ -14,6 +14,29 @@ page_bg_img = """
     background-color: rgba(20, 20, 30, 0.9);
     border-right: 1px solid #333;
 }
+.stButton > button {
+    background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    color: white;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.3s ease;
+}
+.stButton > button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 126, 95, 0.6);
+}
+.streamlit-expanderHeader {
+    background-color: #2a2a3f !important;
+    border-radius: 8px;
+}
+.stTextInput>div>div>input {
+    background-color: #2a2a3f;
+    color: white;
+    border-radius: 5px;
+}
+h1, h2, h3 {
+    color: #ff9a9e !important;
+}
 </style>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
