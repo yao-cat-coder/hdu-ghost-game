@@ -189,6 +189,13 @@ elif page == "怪谈游戏":
     一旦理智值低于30他们便会同化为诡异的一员，并失去意识，只有在这里生存4天4夜才能彻底离开。
     """
     st.divider()
+    if st.button("🔄 重新开始当前区域"):
+        st.session_state.messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"我决定在【{current_location}】碰碰运气"},
+            {"role": "assistant", "content": f"你缓缓推开了【{current_location}】的门..."}
+        ]
+        st.rerun()
     if "messages" not in st.session_state or st.session_state.get("current_loc")!= current_location:
         st.session_state.current_loc = current_location
         st.session_state.messages = [
