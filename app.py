@@ -22,35 +22,38 @@ if page == "🏠 首页大厅":
         for r in reviews_data:
             context += f"- 区域：{r.get('location', '未知')}，店名：{r.get('name', '未知')}，评分：{r.get('score', '未知')}，评价：{r.get('comment', '无')}\n"
     else:
-        context = "目前还没有人留下真实评价，请你根据杭州电子科技大学周围的常见美食生成真实的美食推荐。"
+        pass
     name = st.text_input("请输入你的昵称：")
     user_want = st.text_input("你想吃点什么😊，你的口味是什么❓（想吃点辣的吗、预算20以内想吃好评最多的）")
     submit = st.button("🤖让AI帮我选一家！")
     if submit:
         if name != "" and user_want != "":
-            with st.spinner("🤖AI正在翻阅大家的评价，为你疯狂挑选中... "):
-                client = OpenAI(
-                    api_key = st.secrets["ZHIPU_API_KEY"],
-                    base_url = "https://open.bigmodel.cn/api/paas/v4/"
-                )
-                prompt = f"""
-                你是一个杭电美食推荐官。同学 {name} 的需求是：{user_want}。
-                请根据以下真实评价{context}，为这位同学推荐一家店。
-                要求：语气热情、幽默，用小红书的风格输出，字数在50字以内，包含菜品，口味，价格，是否干净等内容。
-                【绝对铁律】：
-                1. 你推荐的店，店名必须原封不动地出现在【真实评价】里！
-                2. 如果真实评价里没有符合同学口味的店，你必须直接回答：“抱歉，目前大家的评价里还没有符合条件的店哦，你要不去实地测评一下？”绝对不允许自己编造任何不存在的店名！
-                """
-                response = client.chat.completions.create(
-                    model = "glm-4-flash",
-                    messages = [
-                        {"role": "user", "content": prompt},
-                    ]
-                )
-                ai_reply = response.choices[0].message.content
-                st.success("✨AI为你找到了绝佳选择：")
-                st.markdown(ai_reply)
-                st.balloons()
+            if len(reviews_data) == 0:
+                st.warning("⚠️ 抱歉，目前大家的评价库还是空的，AI 拒绝提供不存在的推荐。快点击左侧【美食频道】写下第一条评价吧！")
+            else:
+                with st.spinner("🤖AI正在翻阅大家的评价，为你疯狂挑选中... "):
+                    client = OpenAI(
+                        api_key = st.secrets["ZHIPU_API_KEY"],
+                        base_url = "https://open.bigmodel.cn/api/paas/v4/"
+                    )
+                    prompt = f"""
+                    你是一个杭电美食推荐官。同学 {name} 的需求是：{user_want}。
+                    请根据以下真实评价{context}，为这位同学推荐一家店。
+                    要求：语气热情、幽默，用小红书的风格输出，字数在50字以内，包含菜品，口味，价格，是否干净等内容。
+                    【绝对铁律】：
+                    1. 你推荐的店，店名必须原封不动地出现在【真实评价】里！
+                    2. 如果真实评价里没有符合同学口味的店，你必须直接回答：“抱歉，目前大家的评价里还没有符合条件的店哦，你要不去实地测评一下？”绝对不允许自己编造任何不存在的店名！
+                    """
+                    response = client.chat.completions.create(
+                        model = "glm-4-flash",
+                        messages = [
+                            {"role": "user", "content": prompt},
+                        ]
+                    )
+                    ai_reply = response.choices[0].message.content
+                    st.success("✨AI为你找到了绝佳选择：")
+                    st.markdown(ai_reply)
+                    st.balloons()
         else:
             st.warning("⚠️请先输入你的口味需求哦！")
 elif page == "美食频道":
