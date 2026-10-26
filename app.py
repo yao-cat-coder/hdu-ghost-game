@@ -10,16 +10,16 @@ if page == "🏠 首页大厅":
     st.info("👈 找不到功能入口？请点击左上角的 `>>` 箭头打开导航栏，选择【美食频道】或【怪谈游戏】！")
     st.write("不知道吃什么？告诉我你的口味，我让AI给你用最真实的评价给你推荐")
     st.divider()
-    reviews_date = []
+    reviews_data = []
     if os.path.exists("reviews.json"):
         try:
             with open("reviews.json", "r", encoding = "utf-8")as f:
-                reviews_date = json.load(f)
+                reviews_data = json.load(f)
         except:
             pass
-    if len(reviews_date) > 0:
+    if len(reviews_data) > 0:
         context = "以下是真实食客的评价：\n"
-        for r in reviews_date:
+        for r in reviews_data:
             context += f"- 区域：{r.get('location', '未知')}，店名：{r.get('name', '未知')}，评分：{r.get('score', '未知')}，评价：{r.get('comment', '无')}\n"
     else:
         context = "目前还没有人留下真实评价，请你根据杭州电子科技大学周围的常见美食生成真实的美食推荐。"
@@ -27,15 +27,15 @@ if page == "🏠 首页大厅":
     user_want = st.text_input("你想吃点什么😊，你的口味是什么❓（想吃点辣的吗、预算20以内想吃好评最多的）")
     submit = st.button("🤖让AI帮我选一家！")
     if submit:
-        if name != " " and user_want != " ":
+        if name != "" and user_want != "":
             with st.spinner("🤖AI正在翻阅大家的评价，为你疯狂挑选中... "):
                 client = OpenAI(
-                    api_key = st.secret["ZHIPU_API_KEY"],
+                    api_key = st.secrets["ZHIPU_API_KEY"],
                     base_url = "https://open.bigmodel.cn/api/paas/v4/"
                 )
                 prompt = f"""
                 你是一个杭电美食推荐官。同学 {name} 的需求是：{user_want}。
-                请根据以下真实评价{content}，为这位同学推荐一家店。
+                请根据以下真实评价{context}，为这位同学推荐一家店。
                 要求：语气热情、幽默，用小红书的风格输出，字数在50子以内，包含菜品，口味，价格，是否干净等内容。如果真实评价的内容不够，你可以自己寻找发挥，但是要提醒同学。
                 """
                 response = client.chat.completion.creat(
@@ -44,9 +44,9 @@ if page == "🏠 首页大厅":
                         {"role": "user", "content": prompt},
                     ]
                 )
-                ai_reply = response.choices[0].messages.content
+                ai_reply = response.choices[0].message.content
                 st.success("✨AI为你找到了绝佳选择：")
-                st.markdowm(ai_reply)
+                st.markdown(ai_reply)
                 st.balloons()
         else:
             warning("⚠️请先输入你的口味需求哦！")
