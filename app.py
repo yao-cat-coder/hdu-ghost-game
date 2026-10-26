@@ -27,7 +27,7 @@ header {{
 [data-testid="collapsedControl"] {{
     display: block !important;
     color: white !important;
-    background-color: #ff7e5f !important; 
+    background-color: #8b0000 !important; 
     border-radius: 8px;
     margin: 10px;
 }}
