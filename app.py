@@ -42,7 +42,7 @@ p, span, label, h1, h2, h3, div:not([data-baseweb="select"]) {{
 }}
 .stTextInput>div>div>input, .stTextArea>div>div>textarea {{
     color: #000000 !important; 
-    background-color: #ffffff !important;
+    background-color: #ffffff !important; 
 }}
 .stTextInput>div>div>input::placeholder, .stTextArea>div>div>textarea::placeholder {{
     color: #666666 !important;
@@ -54,29 +54,6 @@ div[data-baseweb="select"] > div {{
     color: #000000 !important;
     background-color: #ffffff !important;
 }}
-[data-testid="stBottom"], 
-[data-testid="stBottomBlockContainer"], 
-[data-testid="stChatInputContainer"],
-.stChatFloatingInputContainer {{
-    background-color: transparent !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-}}
-[data-testid="stChatInput"] {{
-    background-color: rgba(30, 30, 45, 0.8) !important; 
-    border: 1px solid #666 !important;
-    border-radius: 12px !important;
-}}
-[data-testid="stChatInput"] textarea {{
-    color: #ffffff !important;
-}}
-[data-testid="stChatInput"] textarea::placeholder {{
-    color: #aaaaaa !important;
-}}
-[data-testid="stChatInput"] button {{
-    color: #ffffff !important;
-}}                                    
 </style>
 """
 st.markdown(page_bg_css, unsafe_allow_html=True)
