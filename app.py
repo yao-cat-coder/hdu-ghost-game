@@ -7,6 +7,7 @@ st.sidebar.header("导航栏")
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
 if page == "🏠 首页大厅":
     st.title("杭电美食城欢迎您😘")
+    st.info("👈 找不到功能入口？请点击左上角的 `>>` 箭头打开导航栏，选择【美食频道】或【怪谈游戏】！")
     st.write("在这里，你可以看见最真实的美食推荐")
     st.divider()
     name = st.text_input("请输入你的昵称")
