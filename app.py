@@ -3,10 +3,18 @@ import os
 import json
 from openai import OpenAI
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state = "expanded" )
-be_home = "https://s41.ax1x.com/2026/10/26/pnrgFat.jpg"
-be_food = "https://s41.ax1x.com/2026/10/26/pnrgkIP.jpg"
-be_ghost =  "https://s41.ax1x.com/2026/10/26/pnrgVG8.jpg"
+if "user_name" not in st.session_state:
+    st.session_state.user_name = "神秘食客"
+be_home = "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1920&auto=format&fit=crop"
+be_food = "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=1920&auto=format&fit=crop"
+be_ghost =  "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?q=80&w=1920&auto=format&fit=crop"
 st.sidebar.header("导航栏")
+user_name = st.sidebar.text_input("你的昵称:", value=st.session_state.user_name)
+password = st.sidebar.text_input("密码", type = "password")
+if not user_name and not password:
+    st.error("请输入昵称和密码")
+st.session_state.user_name = user_name
+st.session_state.password = password
 page = st.sidebar.radio("选择频道", ["🏠 首页大厅", "美食频道", "怪谈游戏"])
 if page == "🏠 首页大厅":
     current_bg = be_home
@@ -77,14 +85,13 @@ if page == "🏠 首页大厅":
         pass
     col1, col2 = st.columns(2)
     with col1:
-        name = st.text_input("请输入你的昵称：")
         user_want = st.text_input("你想吃点什么😊，你的口味是什么❓（辣的、清淡、预算20）")
     with col2:
         st.write("💡 不知道填什么？试试这些：")
         st.info("👉 想要吃辣，预算20以内\n\n👉 想吃清淡的面食，要好評最多的")
     submit = st.button("🤖让AI帮我选一家！", use_container_width=True)
     if submit:
-        if name != "" and user_want != "":
+        if user_want != "":
             if len(reviews_data) == 0:
                 st.warning("⚠️ 抱歉，目前大家的评价库还是空的，AI 拒绝提供不存在的推荐。快点击左侧【美食频道】写下第一条评价吧！")
             else:
@@ -94,7 +101,7 @@ if page == "🏠 首页大厅":
                         base_url = "https://open.bigmodel.cn/api/paas/v4/"
                     )
                     prompt = f"""
-                    你是一个及其严格的杭电美食推荐官。同学 {name} 的需求是：{user_want}。
+                    你是一个及其严格的杭电美食推荐官。同学的需求是：{user_want}。
                     这是你手头的真实评价数据：{context}
                     【核心执行逻辑】（必须严格遵守）：
                     1.请你现在后台仔细核对：上述真实评价里的菜品和口味，是否真的符合同学的需求；
@@ -131,14 +138,21 @@ elif page == "美食频道":
         comment=st.text_area("写下你的真实感受")
         submitted=st.form_submit_button("提交评价")
     if submitted:
-        if food_name!="" and comment!="":
-            new_review={"location": location, "name": food_name, "score": score, "comment": comment}
-            reviews.append(new_review)
-            with open("reviews.json", "w",encoding="utf-8")as f:
-                json.dump(reviews, f, ensure_ascii=False,indent=4)
-            st.success("✅评价成功")
+        if user_name != "" and password != "":
+            if food_name != "" and comment != "":
+                new_review = {
+                    "user_name": user_name, "password": password, 
+                    "location": location, "name": food_name, "score": score, "comment": comment
+                }
+                reviews.append(new_review)
+                with open("reviews.json", "w", encoding="utf-8") as f:
+                    json.dump(reviews, f, ensure_ascii=False, indent=4)
+                st.success("✅评价成功")
+                st.info("💡 只有昵称和密码与评价时的相同才可以删除该条评论，请记住自己的昵称和密码！")
+            else:
+                st.warning("⚠️店名和评价不能为空哦！")
         else:
-            st.warning("⚠️店名和评价不能为空哦！")
+            st.warning("⚠️ 昵称和密码不能为空哦！否则以后无法删除！")
     st.divider()
     st.subheader("🔥大家怎么说")
     if len(reviews)==0:
@@ -152,14 +166,18 @@ elif page == "美食频道":
                 if len(region_reviews) == 0:
                     st.write("这个区域目前空空如也，快来抢首评论！")
                 else:
-                    for r in region_reviews:
+                    for index, r in enumerate(region_reviews):
                         with st.expander(f"📍{r['name']}——⭐{r['score']}/10"):
+                            st.write(f"发布者:{r.get('user_name', '匿名')}")
                             st.write(r['comment'])
-                            if st.button("🗑️ 删除这条评价", key=f"del_{r['location']}_{r['name']}_{r['score']}"):
-                                reviews.remove(r)
-                                with open("reviews.json", "w", encoding="utf-8")as f:
-                                    json.dump(reviews, f, ensure_ascii=False, indent=4)
-                                st.rerun()        
+                            if st.button("🗑️ 删除这条评价", key=f"del_{region}_{index}"):
+                                if r.get("user_name") == user_name and r.get("password") == password:
+                                    reviews.remove(r)
+                                    with open("reviews.json", "w", encoding="utf-8")as f:
+                                        json.dump(reviews, f, ensure_ascii=False, indent=4)
+                                    st.rerun()        
+                                else:
+                                    st.error("❌ 删除失败！请检查侧边栏的【昵称】和【密码】是否与你发评论时一致。")
 elif page == "怪谈游戏":
     st.header("👻 怪谈游戏区")
     st.write("欢迎来到受诅咒的杭电美食城")
