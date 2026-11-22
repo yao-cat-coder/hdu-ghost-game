@@ -117,8 +117,6 @@ if page == "🏠 首页大厅":
     st.info("👈 找不到功能入口？请点击左上角的 `>>` 箭头打开导航栏，选择【美食频道】或【怪谈游戏】！")
     st.write("不知道吃什么？告诉我你的口味，我让AI给你用最真实的评价给你推荐")
     st.divider()
-
-```
 reviews_data = get_reviews()
 if len(reviews_data) > 0:
     context = "以下是真实食客的评价：\n"
