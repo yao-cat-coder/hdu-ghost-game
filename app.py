@@ -184,7 +184,7 @@ elif page == "美食频道":
 
     all_reviews = get_reviews()
     if len(all_reviews) == 0:
-    st.info("大家还没有评价快来抢沙发🛋️")
+        st.info("大家还没有评价快来抢沙发🛋️")
     else:
         regions = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
         tabs = st.tabs(regions)
