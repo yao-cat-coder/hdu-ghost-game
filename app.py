@@ -1,8 +1,8 @@
 import streamlit as st
-import os
-import json
 from openai import OpenAI
+import db
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state = "expanded" )
+db.init_db()
 if "user_name" not in st.session_state:
     st.session_state.user_name = "神秘食客"
 be_home = "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1920&auto=format&fit=crop"
@@ -11,7 +11,7 @@ be_ghost =  "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?q=80&w
 st.sidebar.header("导航栏")
 user_name = st.sidebar.text_input("你的昵称:", value=st.session_state.user_name)
 password = st.sidebar.text_input("密码", type = "password")
-if not user_name and not password:
+if not user_name or not password:
     st.error("请输入昵称和密码")
 st.session_state.user_name = user_name
 st.session_state.password = password
@@ -70,13 +70,7 @@ if page == "🏠 首页大厅":
     st.info("👈 找不到功能入口？请点击左上角的 `>>` 箭头打开导航栏，选择【美食频道】或【怪谈游戏】！")
     st.write("不知道吃什么？告诉我你的口味，我让AI给你用最真实的评价给你推荐")
     st.divider()
-    reviews_data = []
-    if os.path.exists("reviews.json"):
-        try:
-            with open("reviews.json", "r", encoding = "utf-8")as f:
-                reviews_data = json.load(f)
-        except:
-            pass
+    reviews_data = db.get_reviews()
     if len(reviews_data) > 0:
         context = "以下是真实食客的评价：\n"
         for r in reviews_data:
@@ -123,13 +117,6 @@ if page == "🏠 首页大厅":
 elif page == "美食频道":
     st.header("🍜 美食推荐区")
     st.write("你可以在这里评价周围美食")
-    try:
-        with open("reviews.json", "r", encoding="utf-8")as f:
-            reviews=json.load(f)
-    except FileNotFoundError:
-        reviews=[]
-    except json.JSONDecodeError:
-        reviews = []
     with st.form("my_view_form"):
         st.subheader("发布你的专属评价")
         location = st.selectbox("选择区域", ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"])
@@ -140,13 +127,7 @@ elif page == "美食频道":
     if submitted:
         if user_name != "" and password != "":
             if food_name != "" and comment != "":
-                new_review = {
-                    "user_name": user_name, "password": password, 
-                    "location": location, "name": food_name, "score": score, "comment": comment
-                }
-                reviews.append(new_review)
-                with open("reviews.json", "w", encoding="utf-8") as f:
-                    json.dump(reviews, f, ensure_ascii=False, indent=4)
+                db.add_review(user_name, password, location, food_name, score, comment)
                 st.success("✅评价成功")
                 st.info("💡 只有昵称和密码与评价时的相同才可以删除该条评论，请记住自己的昵称和密码！")
             else:
@@ -155,14 +136,15 @@ elif page == "美食频道":
             st.warning("⚠️ 昵称和密码不能为空哦！否则以后无法删除！")
     st.divider()
     st.subheader("🔥大家怎么说")
-    if len(reviews)==0:
+    all_reviews = db.get_reviews()
+    if len(all_reviews)==0:
         st.info("大家还没有评价快来抢沙发🛋️")
     else:
         regions = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
         tabs = st.tabs(regions)
         for tab, region in zip(tabs, regions):
             with tab:
-                region_reviews = [r for r in reversed(reviews) if r.get("location")==region]
+                region_reviews = [r for r in all_reviews if r.get("location")==region]
                 if len(region_reviews) == 0:
                     st.write("这个区域目前空空如也，快来抢首评论！")
                 else:
@@ -171,11 +153,9 @@ elif page == "美食频道":
                             st.write(f"发布者:{r.get('user_name', '匿名')}")
                             st.write(r['comment'])
                             if st.button("🗑️ 删除这条评价", key=f"del_{region}_{index}"):
-                                if r.get("user_name") == user_name and r.get("password") == password:
-                                    reviews.remove(r)
-                                    with open("reviews.json", "w", encoding="utf-8")as f:
-                                        json.dump(reviews, f, ensure_ascii=False, indent=4)
-                                    st.rerun()        
+                                if db.delete_review(r['id'], user_name, password):
+                                    st.success("✅ 删除成功！")
+                                    st.rerun() 
                                 else:
                                     st.error("❌ 删除失败！请检查侧边栏的【昵称】和【密码】是否与你发评论时一致。")
 elif page == "怪谈游戏":
@@ -184,15 +164,10 @@ elif page == "怪谈游戏":
     map_location = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
     current_location = st.radio("选择探索地区", map_location, horizontal=True)
     recent_reviews=[]
-    if os.path.exists("reviews.json"):
-        try:
-            with open("reviews.json", "r", encoding="utf-8")as f:
-                all_reviews = json.load(f)
-                for r in all_reviews:
-                    if r.get("location") == current_location:
-                        recent_reviews.append(f"店名：{r['name']},评价:{r['comment']}")
-        except:
-            pass
+    all_reviews = db.get_reviews()
+    for r in all_reviews:
+        if r.get("location") == current_location:
+            recent_reviews.append(f"店名：{r['name']},评价:{r['comment']}")
     if len(recent_reviews)>0:
         reviews_context = "以下是食客在这里留下的真是线索："+";".join(recent_reviews)
         st.info(f"已收集到{len(recent_reviews)}条关于【{current_location}】的真实线索！")
