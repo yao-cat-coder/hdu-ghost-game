@@ -11,13 +11,15 @@ DB_CONFIG = {
     "autocommit": True
 }
 DB_NAME = st.secrets["pingkai"]["database"]
+
 def get_connection():
-  conn = pymysql.connect(**DB_CONFIG)
+    conn = pymysql.connect(**DB_CONFIG)
     cursor = conn.cursor()
     cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DB_NAME} DEFAULT CHARACTER SET utf8mb4;")
     cursor.close()
     conn.select_db(DB_NAME)
     return conn
+
 def init_db():
     conn = get_connection()
     cursor = conn.cursor()
@@ -34,28 +36,29 @@ def init_db():
     ''')
     cursor.close()
     conn.close()
+
 def add_review(user_name, password, location, name, score, comment):
     conn = get_connection()
     cursor = conn.cursor()
-    # 注意：占位符从 SQLite 的 ? 变成了 MySQL 的 %s
     cursor.execute('''
         INSERT INTO reviews (user_name, password, location, name, score, comment)
         VALUES (%s, %s, %s, %s, %s, %s)
     ''', (user_name, password, location, name, score, comment))
     cursor.close()
     conn.close()
+
 def get_reviews(location=None):
     conn = get_connection()
-    cursor = conn.cursor(pymysql.cursors.DictCursor) 
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
     if location:
         cursor.execute("SELECT * FROM reviews WHERE location = %s ORDER BY id DESC", (location,))
     else:
         cursor.execute("SELECT * FROM reviews ORDER BY id DESC")
-        
-    rows = cursor.fetchall() 
+    rows = cursor.fetchall()
+    cursor.close()
     conn.close()
-    
-    return rows 
+    return rows
+
 def delete_review(review_id, user_name, password):
     conn = get_connection()
     cursor = conn.cursor()
@@ -65,12 +68,12 @@ def delete_review(review_id, user_name, password):
     rows_deleted = cursor.rowcount
     cursor.close()
     conn.close()
-    
     return rows_deleted > 0
 
+# ============ 2. Streamlit 前端代码 ============
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state="expanded")
 
-db.init_db()
+init_db()
 
 if "user_name" not in st.session_state:
     st.session_state.user_name = "神秘食客"
@@ -146,7 +149,7 @@ if page == "🏠 首页大厅":
     st.write("不知道吃什么？告诉我你的口味，我让AI给你用最真实的评价给你推荐")
     st.divider()
     
-    reviews_data = db.get_reviews()
+    reviews_data = get_reviews()
     if len(reviews_data) > 0:
         context = "以下是真实食客的评价：\n"
         for r in reviews_data:
@@ -200,7 +203,7 @@ elif page == "美食频道":
     if submitted:
         if user_name != "" and password != "":
             if food_name != "" and comment != "":
-                db.add_review(user_name, password, location, food_name, score, comment)
+                add_review(user_name, password, location, food_name, score, comment)
                 st.success("✅评价成功")
                 st.info("💡 只有昵称和密码与评价时的相同才可以删除该条评论，请记住自己的昵称和密码！")
             else:
@@ -211,7 +214,7 @@ elif page == "美食频道":
     st.divider()
     st.subheader("🔥大家怎么说")
     
-    all_reviews = db.get_reviews()
+    all_reviews = get_reviews()
     if len(all_reviews) == 0:
         st.info("大家还没有评价快来抢沙发🛋️")
     else:
@@ -229,7 +232,7 @@ elif page == "美食频道":
                             st.write(r['comment'])
                             
                             if st.button("🗑️ 删除这条评价", key=f"del_{region}_{index}"):
-                                if db.delete_review(r['id'], user_name, password):
+                                if delete_review(r['id'], user_name, password):
                                     st.success("✅ 删除成功！")
                                     st.rerun()        
                                 else:
@@ -242,7 +245,7 @@ elif page == "怪谈游戏":
     current_location = st.radio("选择探索地区", map_location, horizontal=True)
     
     recent_reviews = []
-    all_reviews = db.get_reviews()
+    all_reviews = get_reviews()
     for r in all_reviews:
         if r.get("location") == current_location:
             recent_reviews.append(f"店名：{r['name']},评价:{r['comment']}")
