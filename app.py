@@ -155,13 +155,11 @@ if submit:
                 st.balloons()
     else:
         st.warning("⚠️请先输入你的口味需求哦！")
-```
 
 elif page == "美食频道":
     st.header("🍜 美食推荐区")
     st.write("你可以在这里评价周围美食")
 
-```
 with st.form("my_view_form"):
     st.subheader("发布你的专属评价")
     location = st.selectbox("选择区域", ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"])
@@ -207,7 +205,6 @@ else:
                                 st.rerun()        
                             else:
                                 st.error("❌ 删除失败！请检查侧边栏的【昵称】和【密码】是否与你发评论时一致。")
-```
 
 elif page == "怪谈游戏":
     st.header("👻 怪谈游戏区")
@@ -215,7 +212,6 @@ elif page == "怪谈游戏":
     map_location = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
     current_location = st.radio("选择探索地区", map_location, horizontal=True)
 
-```
 recent_reviews = []
 all_reviews = get_reviews()
 for r in all_reviews:
@@ -270,4 +266,3 @@ if play_action := st.chat_input(f"你在【{current_location}】打算怎么做�
             ai_reply = response.choices[0].message.content
             st.markdown(ai_reply)
     st.session_state.messages.append({"role": "assistant", "content": ai_reply})
-```
