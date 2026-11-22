@@ -1,15 +1,15 @@
 import pymysql
 import streamlit as st
 DB_CONFIG = {
-    "host": "gateway01cn-beijing.aliyun.pingkai.cn",
-    "port": 4000,
-    "user": "UuZV6yJhAyZKoTo.root",
-    "password": "GNuNIAzlGvQVQ5EW", 
+    "host": st.secrets["pingkai"]["host"],
+    "port": st.secrets["pingkai"]["port"],
+    "user": st.secrets["pingkai"]["user"],
+    "password": st.secrets["pingkai"]["password"],
     "charset": "utf8mb4",
-    "ssl": {"ssl": {}}, 
+    "ssl": {"ssl": {}},
     "autocommit": True
 }
-DB_NAME = "hangdian_db"
+DB_NAME = st.secrets["pingkai"]["database"]
 def get_connection():
   conn = pymysql.connect(**DB_CONFIG)
     cursor = conn.cursor()
