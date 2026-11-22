@@ -70,7 +70,6 @@ def delete_review(review_id, user_name, password):
     conn.close()
     return rows_deleted > 0
 
-# ============ 2. Streamlit 前端代码 ============
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state="expanded")
 
 init_db()
