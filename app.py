@@ -79,8 +79,18 @@ def admin_delete_review(review_id):
 
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state="expanded")
 all_reviews = get_reviews()
-dev_pwd = st.sidebar.text_input("开发者验证", type="password", on_change=st.rerun)
-if dev_pwd == st.secrets["PWD"]:
+with st.sidebar:
+    st.subheader("开发者验证")
+    dev_pwd = st.text_input("开发者密码", type="password")
+    if st.button("确认验证"):
+        if dev_pwd == st.secrets["PWD"]:
+            st.session_state.dev_auth = True
+            st.success("✅ 验证成功")
+        else:
+            st.session_state.dev_auth = False
+            st.error("❌ 密码错误")
+
+if st.session_state.get("dev_auth", False):
     if st.sidebar.checkbox("开发者查看全部评价"):
         st.subheader("📋数据库里所有评价")
         st.dataframe(all_reviews, use_container_width=True)
@@ -92,6 +102,7 @@ if dev_pwd == st.secrets["PWD"]:
                 st.success(f"✅ ID={del_id} 的评论删除成功！刷新页面看效果")
             else:
                 st.error(f"❌ 找不到ID={del_id}这条评论")
+
 #init_db()
 
 if "user_name" not in st.session_state:
