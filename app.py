@@ -73,9 +73,9 @@ st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide"
 dev_pwd = st.sidebar.text_input("开发者验证", type="password")
 if dev_pwd == st.secrets["PWD"]:
     if st.sidebar.checkbox("开发者查看全部评价"):
-        st.subheader("数据库里所有评价")
+        st.subheader("📋数据库里所有评价")
         all_reviews = get_reviews()
-        st.dataform(all_reviews, user_container_width=True)
+        st.dataframe(all_reviews, user_container_width=True)
 #init_db()
 
 if "user_name" not in st.session_state:
