@@ -67,7 +67,15 @@ def delete_review(review_id, user_name, password):
     cur.close()
     conn.close()
     return rows_deleted > 0
-
+def admin_delete_review(review_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM reviews WHERE id = %s", (review_id,))
+    conn.commit()
+    deleted = cur.rowcount > 0
+    cur.close()
+    conn.close()
+    return deleted
 
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state="expanded")
 dev_pwd = st.sidebar.text_input("开发者验证", type="password")
@@ -76,6 +84,14 @@ if dev_pwd == st.secrets["PWD"]:
         st.subheader("📋数据库里所有评价")
         all_reviews = get_reviews()
         st.dataframe(all_reviews, use_container_width=True)
+        st.markdown("### 🗑️ 管理员删除评论")
+        del_id = st.number_input("输入要删除的评论ID", min_value=1, step=1)
+        if st.button("确认删除这条", type="primary"):
+            success = admin_delete_review(del_id)
+            if success:
+                st.success(f"✅ ID={del_id} 的评论删除成功！刷新页面看效果")
+            else:
+                st.error(f"❌ 找不到ID={del_id}这条评论")
 #init_db()
 
 if "user_name" not in st.session_state:
