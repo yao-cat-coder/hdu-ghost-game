@@ -222,7 +222,8 @@ elif page == "美食频道":
             if food_name != "" and comment != "":
                 add_review(user_name, password, location, food_name, score, comment)
                 st.success("✅评价成功")
-                st.info("💡 只有昵称和密码与评价时的相同才可以删除该条评论，请记住自己的昵称和密码！")
+                st.caption("💡 发布评价时使用的昵称和密码，是后续删除本条评论的凭证，请妥善保存。")
+                st.rerun()
             else:
                 st.warning("⚠️店名和评价不能为空哦！")
         else:
