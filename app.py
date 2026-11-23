@@ -70,13 +70,13 @@ def delete_review(review_id, user_name, password):
 
 
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state="expanded")
-dev_pwd = st.sidebar_input("开发者验证", type="password")
+dev_pwd = st.sidebar.text_input("开发者验证", type="password")
 if dev_pwd == st.secret["PWD"]:
     if st.sidebar.checkbox("开发者查看全部评价"):
         st.subheader("数据库里所有评价")
         all_reviews = get_reviews()
         st.dataform(all_reviews, user_container_width=True)
-init_db()
+#init_db()
 
 if "user_name" not in st.session_state:
     st.session_state.user_name = "神秘食客"
