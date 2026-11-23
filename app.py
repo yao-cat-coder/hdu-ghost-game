@@ -79,7 +79,7 @@ def admin_delete_review(review_id):
 
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state="expanded")
 all_reviews = get_reviews()
-dev_pwd = st.sidebar.text_input("开发者验证", type="password")
+dev_pwd = st.sidebar.text_input("开发者验证", type="password", on_change=st.rerun)
 if dev_pwd == st.secrets["PWD"]:
     if st.sidebar.checkbox("开发者查看全部评价"):
         st.subheader("📋数据库里所有评价")
