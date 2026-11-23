@@ -96,10 +96,10 @@ if dev_pwd == st.secrets["PWD"]:
 
 if "user_name" not in st.session_state:
     st.session_state.user_name = "神秘食客"
-
-be_home = "[https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1920&auto=format&fit=crop](https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1920&auto=format&fit=crop)"
-be_food = "[https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=1920&auto=format&fit=crop](https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=1920&auto=format&fit=crop)"
-be_ghost = "[https://images.unsplash.com/photo-1509114397022-ed747cca3f65?q=80&w=1920&auto=format&fit=crop](https://images.unsplash.com/photo-1509114397022-ed747cca3f65?q=80&w=1920&auto=format&fit=crop)"
+    
+be_home = "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1920&auto=format&fit=crop"
+be_food = "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?q=80&w=1920&auto=format&fit=crop"
+be_ghost = "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?q=80&w=1920&auto=format&fit=crop"
 
 st.sidebar.header("导航栏")
 user_name = st.sidebar.text_input("你的昵称:", value=st.session_state.user_name)
