@@ -75,7 +75,7 @@ if dev_pwd == st.secrets["PWD"]:
     if st.sidebar.checkbox("开发者查看全部评价"):
         st.subheader("📋数据库里所有评价")
         all_reviews = get_reviews()
-        st.dataframe(all_reviews, user_container_width=True)
+        st.dataframe(all_reviews, use_container_width=True)
 #init_db()
 
 if "user_name" not in st.session_state:
