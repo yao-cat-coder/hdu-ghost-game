@@ -78,11 +78,11 @@ def admin_delete_review(review_id):
     return deleted
 
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state="expanded")
+all_reviews = get_reviews()
 dev_pwd = st.sidebar.text_input("开发者验证", type="password")
 if dev_pwd == st.secrets["PWD"]:
     if st.sidebar.checkbox("开发者查看全部评价"):
         st.subheader("📋数据库里所有评价")
-        all_reviews = get_reviews()
         st.dataframe(all_reviews, use_container_width=True)
         st.markdown("### 🗑️ 管理员删除评论")
         del_id = st.number_input("输入要删除的评论ID", min_value=1, step=1)
@@ -167,10 +167,9 @@ if page == "🏠 首页大厅":
     st.info("👈 找不到功能入口？请点击左上角的 `>>` 箭头打开导航栏，选择【美食频道】或【怪谈游戏】！")
     st.write("不知道吃什么？告诉我你的口味，我让AI给你用最真实的评价给你推荐")
     st.divider()
-    reviews_data = get_reviews()
-    if len(reviews_data) > 0:
+    if len(all_reviews) > 0:
         context = "以下是真实食客的评价：\n"
-        for r in reviews_data:
+        for r in all_reviews:
             context += f"- 区域：{r.get('location', '未知')}，店名：{r.get('name', '未知')}，评分：{r.get('score', '未知')}，评价：{r.get('comment', '无')}\n"
     else:
         context = ""
@@ -189,7 +188,7 @@ if page == "🏠 首页大厅":
                 st.warning("⚠️ 抱歉，目前大家的评价库还是空的，AI 拒绝提供不存在的推荐。快点击左侧【美食频道】写下第一条评价吧！")
             else:
                 with st.spinner("🤖AI正在翻阅大家的评价，为你疯狂挑选中... "):
-                    client = OpenAI(api_key=st.secrets["ZHIPU_API_KEY"], base_url="[https://open.bigmodel.cn/api/paas/v4/](https://open.bigmodel.cn/api/paas/v4/)")
+                    client = OpenAI(api_key=st.secrets["ZHIPU_API_KEY"], base_url="https://open.bigmodel.cn/api/paas/v4/")
                     prompt = f"""
                     你是一个极其严格的杭电美食推荐官。同学的需求是：{user_want}。
                     这是你手头的真实评价数据：{context}
@@ -232,7 +231,6 @@ elif page == "美食频道":
     st.divider()
     st.subheader("🔥大家怎么说")
 
-    all_reviews = get_reviews()
     if len(all_reviews) == 0:
         st.info("大家还没有评价快来抢沙发🛋️")
     else:
@@ -262,7 +260,6 @@ elif page == "怪谈游戏":
     current_location = st.radio("选择探索地区", map_location, horizontal=True)
 
     recent_reviews = []
-    all_reviews = get_reviews()
     for r in all_reviews:
         if r.get("location") == current_location:
             recent_reviews.append(f"店名：{r['name']},评价:{r['comment']}")
