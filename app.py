@@ -273,8 +273,14 @@ elif page == "怪谈游戏":
             st.markdown(play_action)
         with st.chat_message("assistant"):
             with st.spinner("周围的空气变粘稠了..."):
-                client = OpenAI(api_key=st.secrets["ZHIPU_API_KEY"], base_url="[https://open.bigmodel.cn/api/paas/v4/](https://open.bigmodel.cn/api/paas/v4/)")
-                response = client.chat.completions.create(model="glm-4-flash", messages=st.session_state.messages)
-                ai_reply = response.choices[0].message.content
-                st.markdown(ai_reply)
-    st.session_state.messages.append({"role": "assistant", "content": ai_reply})
+                try:
+                    client = OpenAI(api_key=st.secrets["ZHIPU_API_KEY"], base_url="https://open.bigmodel.cn/api/paas/v4/")
+                    response = client.chat.completions.create(model="glm-4-flash", messages=st.session_state.messages)
+                    ai_reply = response.choices[0].message.content
+                    st.markdown(ai_reply)
+                    st.session_state.messages.append({"role": "assistant", "content": ai_reply})
+                except Exception as e:
+                    err_text = "迷雾消散，暂时无法收到来自这片空间的回应，请稍后再试..."
+                    st.markdown(err_text)
+                    st.session_state.messages.append({"role": "assistant", "content": err_text})
+
