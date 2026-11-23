@@ -222,7 +222,7 @@ elif page == "美食频道":
 
     with st.form("my_view_form"):
         st.subheader("发布你的专属评价")
-        location = st.selectbox("选择区域", ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"])
+        location = st.selectbox("选择区域", ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍味堂三层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"])
         food_name = st.text_input("美食/店名")
         score = st.slider("打分（1-10分）", 1, 10, 5)
         comment = st.text_area("写下你的真实感受")
@@ -246,7 +246,7 @@ elif page == "美食频道":
     if len(all_reviews) == 0:
         st.info("大家还没有评价快来抢沙发🛋️")
     else:
-        regions = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
+        regions = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍味堂三层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
         tabs = st.tabs(regions)
         for tab, region in zip(tabs, regions):
             with tab:
@@ -268,7 +268,7 @@ elif page == "美食频道":
 elif page == "怪谈游戏":
     st.header("👻 怪谈游戏区")
     st.write("欢迎来到受诅咒的杭电美食城")
-    map_location = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
+    map_location = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍味堂三层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
     current_location = st.radio("选择探索地区", map_location, horizontal=True)
     if "sanity" not in st.session_state:
         st.session_state.sanity = 100
