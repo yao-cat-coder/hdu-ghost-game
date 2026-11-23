@@ -1,81 +1,73 @@
 import streamlit as st
 from openai import OpenAI
-import pymysql
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
 DB_CONFIG = {
-    "host": st.secrets["pingkai"]["host"],
-    "port": st.secrets["pingkai"]["port"],
-    "user": st.secrets["pingkai"]["user"],
-    "password": st.secrets["pingkai"]["password"],
-    "charset": "utf8mb4",
-    "ssl": {"verify_cert": False},
-    "autocommit": True
+    "host": st.secrets["NEON_HOST"],
+    "port": st.secrets["NEON_PORT"],
+    "user": st.secrets["NEON_USER"],
+    "password": st.secrets["NEON_PASSWORD"],
+    "dbname": st.secrets["NEON_DB"],
+    "sslmode": "require",
 }
-DB_NAME = st.secrets["pingkai"]["database"]
 
 def get_connection():
-    try:
-        conn = pymysql.connect(**DB_CONFIG)
-        cursor = conn.cursor()
-        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DB_NAME} DEFAULT CHARACTER SET utf8mb4;")
-        cursor.close()
-        conn.select_db(DB_NAME)
-        return conn
-    except Exception as e:
-        st.error(f"数据库连接失败：{e}")
-        raise e
+    return psycopg2.connect(**DB_CONFIG)
 
 def init_db():
     conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
+    cur = conn.cursor()
+    cur.execute('''
         CREATE TABLE IF NOT EXISTS reviews (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            user_name VARCHAR(255) NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            location VARCHAR(255) NOT NULL,
-            name VARCHAR(255) NOT NULL,
+            id SERIAL PRIMARY KEY,
+            user_name TEXT NOT NULL,
+            password TEXT NOT NULL,
+            location TEXT NOT NULL,
+            name TEXT NOT NULL,
             score INT NOT NULL,
-            comment TEXT NOT NULL
+            comment TEXT NOT NULL,
+            created_at TIMESTAMPTZ DEFAULT NOW()
         )
     ''')
-    cursor.close()
+    conn.commit()
+    cur.close()
     conn.close()
-
-# init_db()
-
 
 def add_review(user_name, password, location, name, score, comment):
     conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
+    cur = conn.cursor()
+    cur.execute('''
         INSERT INTO reviews (user_name, password, location, name, score, comment)
         VALUES (%s, %s, %s, %s, %s, %s)
-    ''', (user_name, password, location, name, score, comment))
-    cursor.close()
+    ''', (user_name, password, location, name, int(score), comment))
+    conn.commit()
+    cur.close()
     conn.close()
 
 def get_reviews(location=None):
     conn = get_connection()
-    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cur = conn.cursor(cursor_factory=RealDictCursor)
     if location:
-        cursor.execute("SELECT * FROM reviews WHERE location = %s ORDER BY id DESC", (location,))
+        cur.execute("SELECT * FROM reviews WHERE location = %s ORDER BY id DESC", (location,))
     else:
-        cursor.execute("SELECT * FROM reviews ORDER BY id DESC")
-    rows = cursor.fetchall()
-    cursor.close()
+        cur.execute("SELECT * FROM reviews ORDER BY id DESC")
+    rows = cur.fetchall()
+    cur.close()
     conn.close()
     return rows
 
 def delete_review(review_id, user_name, password):
     conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
-        DELETE FROM reviews WHERE id = %s AND user_name = %s AND password = %s
-    ''', (review_id, user_name, password))
-    rows_deleted = cursor.rowcount
-    cursor.close()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM reviews WHERE id = %s AND user_name = %s AND password = %s",
+                (review_id, user_name, password))
+    rows_deleted = cur.rowcount
+    conn.commit()
+    cur.close()
     conn.close()
     return rows_deleted > 0
+
 
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state="expanded")
 
