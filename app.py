@@ -306,6 +306,7 @@ elif page == "怪谈游戏":
             {"role": "user", "content": f"我决定在【{current_location}】碰碰运气"},
             {"role": "assistant", "content": f"你缓缓推开了【{current_location}】的门..."}
         ]
+        st.session_state.sanity = 100
     
     for msg in st.session_state.messages:
         if msg["role"] != "system":
@@ -326,14 +327,21 @@ elif page == "怪谈游戏":
                     client = OpenAI(api_key=st.secrets["ZHIPU_API_KEY"], base_url="https://open.bigmodel.cn/api/paas/v4/")
                     response = client.chat.completions.create(model="glm-4-flash", messages=st.session_state.messages)
                     ai_reply = response.choices[0].message.content
+
+                    lose_sanity = False
+                    if ai_reply.startswith("【-5】"):
+                        lose_sanity = True
+                        ai_reply = ai_reply.replace("【-5】", "")
+                        st.session_state.sanity -= 5
+
                     st.markdown(ai_reply)
                     st.session_state.messages.append({"role": "assistant", "content": ai_reply})
-                    if ai_reply.startswith("【-5】"):
-                        st.session_state.sanity -= 5
-                        ai_reply = ai_reply.replace("【-5】", "")
+                    if lose_sanity:
                         st.warning("⚠️ 危险行为！理智 -5")
+
                 except Exception as e:
                     err_text = "迷雾消散，暂时无法收到来自这片空间的回应，请稍后再试..."
                     st.markdown(err_text)
                     st.session_state.messages.append({"role": "assistant", "content": err_text})
+
 
