@@ -184,7 +184,7 @@ if page == "🏠 首页大厅":
     submit = st.button("🤖让AI帮我选一家！", use_container_width=True)
     if submit:
         if user_want != "":
-            if len(reviews_data) == 0:
+            if len(all_reviews) == 0:
                 st.warning("⚠️ 抱歉，目前大家的评价库还是空的，AI 拒绝提供不存在的推荐。快点击左侧【美食频道】写下第一条评价吧！")
             else:
                 with st.spinner("🤖AI正在翻阅大家的评价，为你疯狂挑选中... "):
@@ -258,7 +258,15 @@ elif page == "怪谈游戏":
     st.write("欢迎来到受诅咒的杭电美食城")
     map_location = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
     current_location = st.radio("选择探索地区", map_location, horizontal=True)
-
+    if "sanity" not in st.session_state:
+        st.session_state.sanity = 100
+    sanity = st.session_state.sanity
+    if sanity > 60:
+        st.success(f"🧠 当前理智值：{sanity}，精神稳定")
+    elif sanity > 30:
+        st.warning(f"🧠 当前理智值：{sanity}，你开始感到不安……")
+    else:
+        st.error(f"🧠 当前理智值：{sanity}，同化！你已经被诡异吞噬！")
     recent_reviews = []
     for r in all_reviews:
         if r.get("location") == current_location:
@@ -272,11 +280,14 @@ elif page == "怪谈游戏":
         st.warning(f"⚠️【{current_location}】暂无真实评价AI只能瞎编了。")
     
     system_prompt = f"""
-    你是一个克苏鲁风格的怪谈游戏主持人，每个人的初始理智值都为100，每次出错都会扣除5点理智值。
-    玩家现在处在【{current_location}】，根据食客的评价{reviews_context}来生成一个50字左右的恐怖诡异场景。并给出玩家十条规则，
-    可以在这十条规则中设置一些矛盾的规则，让玩家自行判断在哪些情况下，矛盾条件的某一条件会成立，另一条件不成立。
-    整个地图的大背景是诡异游戏降临杭电，学生们在这里艰难求生，街道上弥漫着诡气，他们打着能抵御诡气的灯笼在街上行走，寻找一家能填饱肚子的小店。
-    一旦理智值低于30他们便会同化为诡异的一员，并失去意识，只有在这里生存4天4夜才能彻底离开。
+    你是一个克苏鲁风格的怪谈游戏主持人。
+    玩家当前理智值：{st.session_state.sanity}。
+    规则：
+    1.玩家处在【{current_location}】，参考线索：{reviews_context}
+    2.判断玩家行为：如果行为违反规则、危险、作死，回复时第一行写【-5】，然后写剧情；安全行为不扣理智，不要写【-5】
+    3.理智低于等于30，玩家同化，游戏结束，不能继续交互
+    4.生成50字左右诡异场景，附带十条矛盾怪谈规则
+    5.背景：诡异降临杭电，学生持灯笼求生，需要存活4天4夜才能逃离
     """
     st.divider()
 
@@ -300,8 +311,12 @@ elif page == "怪谈游戏":
         if msg["role"] != "system":
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
-            
-    if play_action := st.chat_input(f"你在【{current_location}】打算怎么做？"):
+    if st.session_state.sanity > 30:
+        play_action = st.chat_input(f"你在【{current_location}】打算怎么做？")
+    else:
+        play_action = None
+        st.info("你已经失去理智，无法行动了，请点击重新开始") 
+    if play_action :
         st.session_state.messages.append({"role": "user", "content": play_action})
         with st.chat_message("user"):
             st.markdown(play_action)
@@ -313,6 +328,10 @@ elif page == "怪谈游戏":
                     ai_reply = response.choices[0].message.content
                     st.markdown(ai_reply)
                     st.session_state.messages.append({"role": "assistant", "content": ai_reply})
+                    if ai_reply.startswith("【-5】"):
+                        st.session_state.sanity -= 5
+                        ai_reply = ai_reply.replace("【-5】", "")
+                        st.warning("⚠️ 危险行为！理智 -5")
                 except Exception as e:
                     err_text = "迷雾消散，暂时无法收到来自这片空间的回应，请稍后再试..."
                     st.markdown(err_text)
