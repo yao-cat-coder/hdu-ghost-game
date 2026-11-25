@@ -203,11 +203,13 @@ if page == "🏠 首页大厅":
                     client = OpenAI(api_key=st.secrets["ZHIPU_API_KEY"], base_url="https://open.bigmodel.cn/api/paas/v4/")
                     prompt = f"""
                     你是一个极其严格的杭电美食推荐官。同学的需求是：{user_want}。
-                    这是你手头的真实评价数据：{all_reviews}
+                    这是你手头的真实评价数据：{context}
                     【核心执行逻辑】（必须严格遵守）：
                     1.请你现在后台仔细核对：上述真实评价里的菜品和口味，是否真的符合同学的需求；
                     2.如果数据里写的和同学的需求不匹配，必须无情拒绝，直接回答：“抱歉，目前大家的真实评价里没有符合你口味的店铺哦”，绝不允许自己不顾需求和实际强行推荐！
                     3.只有当真实评价确实符合同学需求时，你才能用热情、幽默的的方式以小红书的风格输出推荐，要求60字以内
+                    4.如果评价里没有提到用户的需求，可以根据店名来提供推荐，但必须根据评价内容来组织语言，不可以自己编造数据。
+                    5.如果店名和评价内容都没有匹配的内容，可以推荐高分店铺，并加上回答：“抱歉，目前大家的真实评价里没有符合你口味的店铺哦，但是一下店铺和菜品强烈推荐”
                     """
                     response = client.chat.completions.create(model="glm-4-flash", messages=[{"role": "user", "content": prompt}])
                     ai_reply = response.choices[0].message.content
