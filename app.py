@@ -78,7 +78,6 @@ def admin_delete_review(review_id):
     return deleted
 
 st.set_page_config(page_title="杭电奇妙夜", page_icon="🏰", layout="wide", initial_sidebar_state="expanded")
-all_reviews = get_reviews()
 with st.sidebar:
     st.subheader("开发者验证")
     dev_pwd = st.text_input("开发者密码", type="password")
@@ -92,6 +91,7 @@ with st.sidebar:
 
 if st.session_state.get("dev_auth", False):
     if st.sidebar.checkbox("开发者查看全部评价"):
+        all_reviews = get_reviews()
         st.subheader("📋数据库里所有评价")
         st.dataframe(all_reviews, use_container_width=True)
         st.markdown("### 🗑️ 管理员删除评论")
@@ -174,6 +174,7 @@ div[data-baseweb="select"] > div {{
 st.markdown(page_bg_css, unsafe_allow_html=True)
 
 if page == "🏠 首页大厅":
+    all_reviews = get_reviews()
     st.title("🍜 杭电美食城 AI 推荐馆")
     st.info("👈 找不到功能入口？请点击左上角的 `>>` 箭头打开导航栏，选择【美食频道】或【怪谈游戏】！")
     st.write("不知道吃什么？告诉我你的口味，我让AI给你用最真实的评价给你推荐")
@@ -219,7 +220,7 @@ if page == "🏠 首页大厅":
 elif page == "美食频道":
     st.header("🍜 美食推荐区")
     st.write("你可以在这里评价周围美食")
-
+    all_reviews = get_reviews()
     with st.form("my_view_form"):
         st.subheader("发布你的专属评价")
         location = st.selectbox("选择区域", ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍味堂三层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"])
@@ -268,6 +269,7 @@ elif page == "美食频道":
 elif page == "怪谈游戏":
     st.header("👻 怪谈游戏区")
     st.write("欢迎来到受诅咒的杭电美食城")
+    all_reviews = get_reviews()
     map_location = ["绍味堂一层大众餐厅", "绍味堂二层美食城", "绍味堂三层美食城", "绍信公寓周边", "东门“芯潮集合街”与周边"]
     current_location = st.radio("选择探索地区", map_location, horizontal=True)
     if "sanity" not in st.session_state:
