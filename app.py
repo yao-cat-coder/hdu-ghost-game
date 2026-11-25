@@ -202,7 +202,7 @@ if page == "🏠 首页大厅":
                     client = OpenAI(api_key=st.secrets["ZHIPU_API_KEY"], base_url="https://open.bigmodel.cn/api/paas/v4/")
                     prompt = f"""
                     你是一个极其严格的杭电美食推荐官。同学的需求是：{user_want}。
-                    这是你手头的真实评价数据：{context}
+                    这是你手头的真实评价数据：{all_reviews}
                     【核心执行逻辑】（必须严格遵守）：
                     1.请你现在后台仔细核对：上述真实评价里的菜品和口味，是否真的符合同学的需求；
                     2.如果数据里写的和同学的需求不匹配，必须无情拒绝，直接回答：“抱歉，目前大家的真实评价里没有符合你口味的店铺哦”，绝不允许自己不顾需求和实际强行推荐！
